@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>		// Timer
-#include <sys/time.h>	// Timer
+#include <time.h>        // Timer
+#include <sys/time.h>    // Timer
 
 #include <iostream>
 #include <fstream>
@@ -24,6 +24,8 @@ bool is_special_char3 (char c);
 bool read_line_as_tokens3 (string line, vector<string>& tokens);
 int PPI_PO_size(string);
 
+#define TOTAL_CYCLES 1000
+#define TOTAL_WORKLOADS 1
 
 
 
@@ -34,20 +36,20 @@ int PPI_PO_size(string);
  int main(int argc, char *argv[])
  {
 
-	for (int i=1 ; i<argc  ; i++ ){
-			if ( strcmp(argv[i],"-file") == 0 || strcmp(argv[i],"-f") == 0 )
-			{
-				input_file = string(argv[++i]);
-			}
-			else{
-			cout<<"Error: Unknown Argument : "<<argv[i];
-			cin.get();
-			exit(0);}
-		}
-	cout<<input_file<<endl;
+    for (int i=1 ; i<argc  ; i++ ){
+            if ( strcmp(argv[i],"-file") == 0 || strcmp(argv[i],"-f") == 0 )
+            {
+                input_file = string(argv[++i]);
+            }
+            else{
+            cout<<"Error: Unknown Argument : "<<argv[i];
+            cin.get();
+            exit(0);}
+        }
+    cout<<input_file<<endl;
 
 
-	std::string inputs_str = "";
+    std::string inputs_str = "";
 
 
 int MISRsize;
@@ -129,145 +131,144 @@ montr_ff = PPI_PO_size(input_file);
 int PPI_PO_size(string input_file)
 {
 int local_montr_ff;
-//			stringstream ss;//create a stringstream
-//			ss << '0';//add number to the stream
+//            stringstream ss;//create a stringstream
+//            ss << '0';//add number to the stream
 
-				int data_array[1010][1000];
-				int sp_array[1000];
-	ofstream sppo_file;
-	sppo_file.open("sppo.txt");
-
-
-
-	 for (int iteration=0;iteration<2000;	iteration++)
-	 {
-	   cout<<"iteration: "<<iteration<<endl;
-			stringstream ss;//create a stringstream
-
-			ss << iteration;//add number to the stream
+                int data_array[5][TOTAL_CYCLES];
+                int sp_array[TOTAL_CYCLES];
+    ofstream sppo_file;
+    sppo_file.open("sppo.txt");
 
 
+
+     for (int iteration=0;iteration<TOTAL_WORKLOADS;    iteration++)
+     {
+       cout<<"iteration: "<<iteration<<endl;
+            stringstream ss;//create a stringstream
+
+            ss << iteration;//add number to the stream
 
 
 
 
-			//input patterns file (input)
-			string dump_name=ss.str();
-			dump_name="input/"+input_file+"/"+input_file+"_PPI_"+dump_name;
-			string myfile1=dump_name;
-			ifstream file1 (myfile1.c_str());
 
 
-			//input patterns file (input)
-			string dump_name2=ss.str();
-			dump_name2="input/"+input_file+"/"+input_file+"_PO_"+dump_name2;
-			string myfile2=dump_name2;
-			ifstream file2 (myfile2.c_str());
+            //input patterns file (input)
+            string dump_name=ss.str();
+            dump_name="input_test/"+input_file+"/"+input_file+"_PPI_"+dump_name;
+            string myfile1=dump_name;
+            ifstream file1 (myfile1.c_str());
 
 
-
-
-			//cout<<myfile1<<endl;
+            //input patterns file (input)
+            string dump_name2=ss.str();
+            dump_name2="input_test/"+input_file+"/"+input_file+"_PO_"+dump_name2;
+            string myfile2=dump_name2;
+            ifstream file2 (myfile2.c_str());
 
 
 
 
-//			//input patterns file (input)
-//			string dump_name=ss.str();
-//			dump_name="input/"+input_file+"/"+input_file+"_PPI_"+dump_name;
-//			string myfile1=dump_name;
-//			ifstream file1 (myfile1.c_str());
+            //cout<<myfile1<<endl;
+
+
+
+
+//            //input patterns file (input)
+//            string dump_name=ss.str();
+//            dump_name="input/"+input_file+"/"+input_file+"_PPI_"+dump_name;
+//            string myfile1=dump_name;
+//            ifstream file1 (myfile1.c_str());
 //
 //
-//			//input patterns file (input)
-//			string dump_name2=ss.str();
-//			dump_name2="input/"+input_file+"/"+input_file+"_PO_"+dump_name2;
-//			string myfile2=dump_name2;
-//			ifstream file2 (myfile2.c_str());
+//            //input patterns file (input)
+//            string dump_name2=ss.str();
+//            dump_name2="input/"+input_file+"/"+input_file+"_PO_"+dump_name2;
+//            string myfile2=dump_name2;
+//            ifstream file2 (myfile2.c_str());
 //
 
 
 
-			//cout<<myfile1<<endl;
+            //cout<<myfile1<<endl;
 
-			string line="";
+            string line="";
 
-			for (int i=0;i<1000;i++)
-			{
-			vector<string> tokens;
+            for (int i=0;i<TOTAL_CYCLES;i++)
+            {
+            vector<string> tokens;
 
-				tokens.clear() ;
-				getline( file1 , line , '\n');
-				bool valid = read_line_as_tokens3 (line, tokens);
-
-
-				//cout<<tokens.size()<<endl;
-
-				ss.str("");
-				ss.clear();
-				for(int m=0; m < tokens.size(); m++)
-				ss << tokens[m];
-
-				tokens.clear() ;
-				getline( file2 , line , '\n');
-				valid = read_line_as_tokens3 (line, tokens);
-
-				//cout<<tokens.size()<<endl;
-
-				for(int m=0; m < tokens.size(); m++)
-				ss << tokens[m];
-
-				std::string total_inputs_str;
-				int wrapno;
-
-				total_inputs_str = ss.str();
-
-				for(unsigned int z = 0; z<total_inputs_str.length(); z++) {
-  				  char c = total_inputs_str[z]; //this is your character
-    					int sank= c - '0';
-					cout << sank << "\t" << c << endl;
-				data_array[i][z]=sank;
-//				cout << "i is " << i << " z is " << z << "data_array  is " << data_array[i][z] << endl;
-					}
+                tokens.clear() ;
+                getline( file1 , line , '\n');
+                bool valid = read_line_as_tokens3 (line, tokens);
 
 
-				cout << total_inputs_str <<endl;
-				local_montr_ff = total_inputs_str.size();
+                //cout<<tokens.size()<<endl;
+
+                ss.str("");
+                ss.clear();
+                for(int m=0; m < tokens.size(); m++)
+                ss << tokens[m];
+
+                tokens.clear() ;
+                getline( file2 , line , '\n');
+                valid = read_line_as_tokens3 (line, tokens);
+
+                //cout<<tokens.size()<<endl;
+
+                for(int m=0; m < tokens.size(); m++)
+                ss << tokens[m];
+
+                std::string total_inputs_str;
+                int wrapno;
+
+                total_inputs_str = ss.str();
+
+                for(unsigned int z = 0; z<total_inputs_str.length(); z++) {
+                    char c = total_inputs_str[z]; //this is your character
+                        int sank= c - '0';
+                    cout << sank << "\t" << c << endl;
+                data_array[i][z]=sank;
+//                cout << "i is " << i << " z is " << z << "data_array  is " << data_array[i][z] << endl;
+                    }
 
 
-				}//loop for 1000
-				//write the sp value to spp file for each coloumn of a file
+                cout << total_inputs_str <<endl;
+                local_montr_ff = total_inputs_str.size();
 
 
-				float sp_value=0;
-				float total_value=0;
-				for(int l=0;l<local_montr_ff;l++)
-				{
-				sp_value=0;
-				total_value=0;
-					for(int k=0;k<1000;k++)
-					{
-					total_value=total_value+data_array[k][l];
-					if (data_array[k][l]==0 || data_array[k][l]==1)
-					{}
-					else
-					{cout <<" report error " << data_array[k][l] <<" "<< k <<" " << l <<endl;}
-//					cout << "total value is " << total_value <<endl;
-//				cout << "k is " << k << " l is " << l << "data_array  is " << data_array[k][l] << "monitor_ff is "<< montr_ff << "total_value " << total_value<< endl;
-						if (total_value>1000)
-						{
-				cout << "k is " << k << " l is " << l << "data_array  is " << data_array[k][l] << "monitor_ff is "<< local_montr_ff << "total_value " << total_value<< "sp_value is " << sp_value <<endl;}
-					}
-					sp_value=total_value/1000;
-					//cout << "sp_value is " << sp_value << endl;
+                }//loop for 1000
+                //write the sp value to spp file for each coloumn of a file
 
-					sppo_file << sp_value << "\t";
-				}
-				sppo_file << endl;
-//				return montr_ff;
-			}// for the loop 2000
+
+                float sp_value=0;
+                float total_value=0;
+                for(int l=0;l<local_montr_ff;l++)
+                {
+                sp_value=0;
+                total_value=0;
+                    for(int k=0;k<TOTAL_CYCLES;k++)
+                    {
+                    total_value=total_value+data_array[k][l];
+                    if (data_array[k][l]==0 || data_array[k][l]==1)
+                    {}
+                    else
+                    {cout <<" report error " << data_array[k][l] <<" "<< k <<" " << l <<endl;}
+//                    cout << "total value is " << total_value <<endl;
+//                cout << "k is " << k << " l is " << l << "data_array  is " << data_array[k][l] << "monitor_ff is "<< montr_ff << "total_value " << total_value<< endl;
+                        if (total_value>TOTAL_CYCLES)
+                        {
+                cout << "k is " << k << " l is " << l << "data_array  is " << data_array[k][l] << "monitor_ff is "<< local_montr_ff << "total_value " << total_value<< "sp_value is " << sp_value <<endl;}
+                    }
+                    sp_value=total_value/TOTAL_CYCLES;
+                    //cout << "sp_value is " << sp_value << endl;
+
+                    sppo_file << sp_value << "\t";
+                }
+                sppo_file << endl;
+//                return montr_ff;
+            }// for the loop 2000
 sppo_file.close();
 }
 
 //######################################FIND THE MONITOR_FF SIZE (PPI+PO
-
